@@ -109,8 +109,8 @@ class PrinterTransport:
         device_path: str = "auto",
         vendor_id: str = "1a86",
         product_id: str = "7584",
-        chunk_size: int = 4096,
-        chunk_delay_sec: float = 0.005,
+        chunk_size: int = 1024,
+        chunk_delay_sec: float = 0.008,
     ) -> None:
         self.device_path = device_path
         self.vendor_id = vendor_id

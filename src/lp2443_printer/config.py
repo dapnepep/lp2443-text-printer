@@ -30,8 +30,8 @@ class PrinterSettings(BaseSettings):
     gap_dots: int = Field(default=24, ge=0, le=120)
 
     # EPL2 print parameters
-    speed: int = Field(default=2, ge=1, le=4, description="Print speed (1-4 for LP2443)")
-    density: int = Field(default=10, ge=0, le=15, description="Print darkness/density (0-15)")
+    speed: int = Field(default=1, ge=1, le=4, description="Print speed (1-4 for LP2443; 1=slowest/darkest)")
+    density: int = Field(default=15, ge=0, le=15, description="Print darkness/density (0-15; 15=maximum darkness)")
     invert_bitmap: bool = Field(
         default=False,
         description="Invert GW bitmap bits if firmware expects 1=black instead of 0=black",

@@ -116,14 +116,16 @@ def render_text_label(
     # Create grayscale canvas first for crisp layout, convert to 1-bit at the end
     img = Image.new("L", (canvas_width, canvas_height), color=255)
     draw = ImageDraw.Draw(img)
+    # Disable grayscale anti-aliasing so glyphs are 100% solid filled for thermal printing
+    draw.fontmode = "1"
 
-    # Outer border
+    # Outer border (thin 3px border to avoid excessive power draw on thermal head)
     if show_border:
         draw.rounded_rectangle(
             (8, 8, canvas_width - 9, canvas_height - 9),
-            radius=20,
+            radius=16,
             outline=0,
-            width=6,
+            width=3,
         )
 
     content_top = margin_px
@@ -133,22 +135,31 @@ def render_text_label(
     usable_width = content_right - content_left
 
     # Optional Header Banner (Sender + Timestamp)
+    # Uses black text on white background + divider line instead of a solid black bar
+    # to prevent LP2443PSA power supply voltage sag (light-to-dark gradients).
     if show_header:
         ts_str = (timestamp or datetime.now()).strftime("%Y-%m-%d  %I:%M %p")
         header_font = load_font(28, mono=True)
         sender_label = f"FROM: {sender}" if sender else "INCOMING MESSAGE"
 
-        # Draw inverted black header bar at top inside border
-        header_box_top = 20
-        header_box_bottom = 112
-        draw.rounded_rectangle(
-            (20, header_box_top, canvas_width - 21, header_box_bottom),
-            radius=12,
+        header_box_top = 24
+        draw.text(
+            (36, header_box_top),
+            sender_label[:38],
+            font=header_font,
+            fill=0,
+            stroke_width=1,
+            stroke_fill=0,
+        )
+        draw.text(
+            (36, header_box_top + 38),
+            ts_str,
+            font=header_font,
             fill=0,
         )
-        draw.text((38, header_box_top + 12), sender_label[:38], font=header_font, fill=255)
-        draw.text((38, header_box_top + 50), ts_str, font=header_font, fill=255)
-        content_top = header_box_bottom + 28
+        divider_y = header_box_top + 82
+        draw.line((24, divider_y, canvas_width - 25, divider_y), fill=0, width=3)
+        content_top = divider_y + 24
 
     usable_height = content_bottom - content_top
 
@@ -193,7 +204,15 @@ def render_text_label(
         else:
             x_cursor = content_left
 
-        draw.text((x_cursor, y_cursor), line, font=chosen_font, fill=0)
+        bold_stroke = 2 if chosen_line_height >= 56 else 1
+        draw.text(
+            (x_cursor, y_cursor),
+            line,
+            font=chosen_font,
+            fill=0,
+            stroke_width=bold_stroke,
+            stroke_fill=0,
+        )
         y_cursor += chosen_line_height
 
     # Convert to strict 1-bit monochrome (0=black, 255=white)

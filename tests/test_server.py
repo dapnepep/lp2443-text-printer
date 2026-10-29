@@ -58,7 +58,7 @@ def test_api_print_and_auth_and_sms_webhook(tmp_path: Path) -> None:
 
     # Verify dummy device received valid EPL2 GW payload
     written_bytes = dummy_dev.read_bytes()
-    assert b"\nN\nq812\nQ1218,24\n" in written_bytes
+    assert b"\nN\nq812\nQ1218,24\nS1\nD15\n" in written_bytes
     assert written_bytes.endswith(b"\nP1\n")
 
     # Test Twilio SMS Webhook with ?token= query param

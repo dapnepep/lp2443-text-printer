@@ -109,8 +109,7 @@ def main(argv: list[str] | None = None) -> int:
                 written = service.print_native_test()
             else:
                 test_msg = (
-                    "Hello from Raspberry Pi!\n\n"
-                    "LP2443PSA + QinHeng CH340S (1a86:7584) is ready to print your texts!"
+                    "Hello from Raspberry Pi!\n\nLP2443PSA + QinHeng CH340S (1a86:7584) is ready to print your texts!"
                 )
                 written = service.print_text(
                     message=test_msg,
