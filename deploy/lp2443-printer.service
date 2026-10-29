@@ -1,0 +1,17 @@
+[Unit]
+Description=LP2443PSA Text-to-Label Printer Service (Web UI, Webhook & Telegram Bot)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=__SERVICE_USER__
+Group=lp
+WorkingDirectory=__INSTALL_DIR__
+EnvironmentFile=-__INSTALL_DIR__/.env
+ExecStart=__INSTALL_DIR__/.venv/bin/lp2443 serve
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

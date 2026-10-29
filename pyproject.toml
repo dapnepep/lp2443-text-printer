@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lp2443-text-printer"
+version = "0.1.0"
+description = "Plug-and-play text-to-label printer service for Eltron/Zebra LP2443PSA via QinHeng CH340S USB-LPT on Raspberry Pi 4"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Jake" }]
+dependencies = [
+    "pillow>=13.0.0",
+    "fastapi>=0.162.0",
+    "uvicorn[standard]>=0.54.0",
+    "python-telegram-bot>=22.8",
+    "pydantic>=2.14.0",
+    "pydantic-settings>=2.16.0",
+    "httpx>=0.28.0",
+    "python-multipart>=0.0.20",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.1.0",
+    "ruff>=0.17.0",
+]
+
+[project.scripts]
+lp2443 = "lp2443_printer.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

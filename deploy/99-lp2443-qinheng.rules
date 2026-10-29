@@ -1,0 +1,7 @@
+# udev rule for QinHeng Electronics CH340S USB-to-LPT Converter (1a86:7584) connected to LP2443PSA
+# 1. Creates a persistent /dev/lp2443 symlink regardless of USB port or /dev/usb/lp* numbering
+# 2. Grants read/write permissions (0660) to the 'lp' group
+# 3. Disables USB autosuspend so the CH340S never drops bytes on wake
+
+SUBSYSTEM=="usbmisc", KERNEL=="lp[0-9]*", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7584", GROUP="lp", MODE="0660", SYMLINK+="lp2443"
+SUBSYSTEM=="usb", ATTR{idVendor}=="1a86", ATTR{idProduct}=="7584", ATTR{power/control}="on"
